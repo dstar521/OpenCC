@@ -1,0 +1,30 @@
+name: Build OpenCC Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Configure
+      run: cmake -B build -A x64
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: opencc-win64
+        path: |
+          build/Release/opencc.exe
+          build/Release/opencc.dll
+          data
