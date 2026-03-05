@@ -20,11 +20,18 @@ jobs:
     - name: Build
       run: cmake --build build --config Release
 
-    - name: Upload EXE
+    - name: Prepare package
+      run: |
+        mkdir opencc-win64
+        copy build\Release\opencc.exe opencc-win64\
+        copy build\Release\opencc.dll opencc-win64\
+        xcopy data opencc-win64\data /E /I
+
+    - name: Zip package
+      run: powershell Compress-Archive opencc-win64 opencc-win64.zip
+
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: opencc-win64
-        path: |
-          build/Release/opencc.exe
-          build/Release/opencc.dll
-          data
+        path: opencc-win64.zip
